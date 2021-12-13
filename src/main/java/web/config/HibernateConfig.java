@@ -21,13 +21,19 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
-@PropertySource("/resources/db.properties")
+@PropertySource("classpath:/db.properties")
 @ComponentScan("web")
 
 
 public class HibernateConfig {
 
     private Environment environment;
+
+    private final String db_driver = "com.mysql.cj.jdbc.Driver";
+    private final String db_url = "jdbc:mysql://localhost/security?serverTimezone=Europe/Moscow&useSSL=false";
+    private final String db_username = "root";
+    private final String db_password = "root";
+
 
     @Autowired
     public void setEnvironment(Environment environment) {
@@ -36,10 +42,13 @@ public class HibernateConfig {
 
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty(environment.getProperty("hibernate.dialect"),"hibernate.dialect");
+        properties.setProperty(environment.getProperty("hibernate.show_sql"),"hibernate.show_sql");
+        properties.setProperty(environment.getProperty("hibernate.format_sql"),"hibernate.format_sql");
+        properties.setProperty(environment.getProperty("hibernate.use_sql_comments")," hibernate.use_sql_comments");
+        properties.setProperty(environment.getProperty("hibernate.hbm2ddl.auto"),"hibernate.hbm2ddl.auto");
+        properties.setProperty(environment.getProperty("hibernate.generate_statistics"),"hibernate.generate_statistics");
+
         return properties;
     }
 
