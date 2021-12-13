@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -17,15 +19,21 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "role_id")
     private Long id;
 
     @Column(name = "name")
     private String role;
 
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
     public Role() {
     }
 
+    public Role(String role) {
+        this.role = role;
+    }
     public Role(Long id) {
         this.id = id;
     }
@@ -33,7 +41,6 @@ public class Role implements GrantedAuthority {
     public Role(Long id, String role) {
         this.id = id;
         this.role = role;
-//
     }
 
     public Long getId() {
@@ -52,21 +59,21 @@ public class Role implements GrantedAuthority {
         this.role = role;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
     @Override
     public String getAuthority() {
         return getRole();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Role role1 = (Role) o;
-        return id.equals(role1.id) && role.equals(role1.role);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, role);
+    public String toString() {
+        return role;
     }
 }

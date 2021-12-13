@@ -2,11 +2,15 @@ package web.dao;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import web.entity.Role;
 import web.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 @Repository
 @Transactional(readOnly = true)
@@ -17,36 +21,35 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<User> getAllUsers() {
-        return entityManager.createQuery("select u from User u", User.class).getResultList();
+        return entityManager.createQuery("SELECT  u FROM User u", User.class).getResultList();
     }
 
     @Transactional
     @Override
     public void saveUser(User user) {
         entityManager.persist(user);
-
     }
 
-    public User show(int id) {
+    public User show(long id) {
         User user = entityManager.find(User.class, id);
         return user;
     }
 
     @Transactional
     @Override
-    public void updateUser(User updateUser, int id) {
-        User userToBeUpdated = show(id);
-        userToBeUpdated.setName(updateUser.getName());
-        userToBeUpdated.setlastName(updateUser.getlastName());
-        userToBeUpdated.setAge(updateUser.getAge());
-        userToBeUpdated.setPhoneNumber(updateUser.getPhoneNumber());
-        entityManager.merge(updateUser);
-
+    public void updateUser(User user) {
+        entityManager.merge(user);
     }
 
     @Transactional
     @Override
-    public void removeUserById(int id) {
+    public void removeUserById(long id) {
         entityManager.remove(show(id));
+    }
+
+    @Override
+    public User findByUserName(String name) {
+        return entityManager.createQuery("SELECT u FROM User u  WHERE u.name=:name", User.class).setParameter("name", name).getSingleResult();
+
     }
 }

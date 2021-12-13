@@ -1,12 +1,12 @@
-package web.dao;
+package web.service;
 
 import web.entity.Role;
 import web.entity.User;
 
+import java.util.HashSet;
 import java.util.List;
 
-
-public interface RoleDao {
+public interface RoleService {
 
     List<User> getListRole();
 
@@ -17,4 +17,6 @@ public interface RoleDao {
     Role getById(int id);
 
     Role getByName(String roleName);
+
+    public HashSet getRoleSet(String[] role);
 }

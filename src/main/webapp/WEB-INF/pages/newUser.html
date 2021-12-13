@@ -6,22 +6,27 @@
     <title>New User</title>
 </head>
 <body>
-<div align="center"></div>
-<form th:method="POST" th:action="@{/}" th:object="${user}">
-  <label for="name">Enter name</label>
+<div align="center">
+<form method="POST" th:action="@{/newUser}"  th:object="${user}">
+  <label for="name">Name</label>
   <input type="text" th:field="*{name}" id="name"/>
   <br>
-  <label for="lastName">Last name</label>
-  <input name="lastName" type="text" id="lastName"/>
+  <label for="password">Password</label>
+  <input name="password" type="text" id="password"/>
   <br>
-  <label for="age">Age</label>
-  <input name="age" type="text" id="age"/>
-  <br>
-  <label for="phoneNumber">Phone number</label>
-  <input name="phoneNumber" type="text" id="phoneNumber"/>
+  <label for="email">E-mail</label>
+  <input name="email" type="text" id="email"/>
+    <br>
+  <input type="checkbox" name="roles" value="ROLE_USER"/> USER
+  <input type="checkbox" name="roles" value="ROLE_ADMIN"/> ADMIN
   <br>
   <input type="submit" value="Add user"/>
 </form>
+  <br>
+  <br>
+  <form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+  </form>
 </div>
 </body>
 </html>

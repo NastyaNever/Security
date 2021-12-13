@@ -1,44 +1,65 @@
 package web.entity;
 
-import javax.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "userdata")
-public class User {
+@Table(name = "users")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "user_id")
+    private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @Column(name = "lastname")
-    private String lastName;
+    @Column(name = "password")
+    private String password;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "e_mail")
+    private String email;
 
-    @Column(name = "p_number")
-    private String phoneNumber;
-
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
     public User() {
     }
 
-    public User(int id, String name, String lastName, Integer age, String phoneNumber) {
+    public User(Long id, String name, String password, String email, Set<Role> roles) {
         this.id = id;
         this.name = name;
-        this.lastName = lastName;
-        this.age = age;
-        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -49,38 +70,70 @@ public class User {
         this.name = name;
     }
 
-    public String getlastName() {
-        return lastName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setlastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Integer getAge() {
-        return age;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
-    public String toString() {
-        return "User " +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", phoneNumber='" + phoneNumber + '\'';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Role> roles = getRoles();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRole()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }
+
+

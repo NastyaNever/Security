@@ -2,10 +2,13 @@ package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import web.dao.RoleDaoImpl;
 import web.dao.UserDAOImpl;
+import web.entity.Role;
 import web.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,17 +26,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, int id) {
-        userDAOImpl.updateUser(user, id);
+    public void updateUser(User user) {
+        userDAOImpl.updateUser(user);
     }
 
     @Override
-    public User show(int id) {
+    public User show(long id) {
         return userDAOImpl.show(id);
     }
 
     @Override
-    public void removeUserById(int id) {
+    public void removeUserById(long id) {
         userDAOImpl.removeUserById(id);
     }
 
@@ -41,4 +44,5 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userDAOImpl.getAllUsers();
     }
+
 }

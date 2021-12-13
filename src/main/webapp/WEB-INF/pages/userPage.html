@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update user</title>
+</head>
+<body>
+<h2>User info</h2>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Role</th>
+
+    </tr>
+    <tr>
+        <td><p th:text="${user.getName()}"></td>
+        <td><p th:text="${user.getEmail()}"></td>
+        <td><p th:text="${user.getPassword()}"></td>
+      <td><p th:text="${user.getRoles()}"></td>
+    </tr>
+</table>
+  <br>
+  <br>
+  <form th:action="@{/logout}" method="POST">
+    <input type="submit" value="Logout"/>
+  </form>
+</div>
+</body>
+</html>
